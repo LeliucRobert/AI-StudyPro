@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Grammar and Summary Extension",
+  "version": "1.0",
+  "description": "Corrects grammar, suggests auto-completions, and summarizes text on web pages.",
+  "permissions": ["activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup/popup.html"
+  }
+}
