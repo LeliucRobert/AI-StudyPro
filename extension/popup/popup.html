@@ -5,12 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grammar & Summary</title>
     <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="../bootstrap/bootstrap.min.css" />
   </head>
   <body>
-    <div class="div1">
-      <h1>Extension Popup</h1>
-      <button id="actionButton">Click Me</button>
+    <div class="header">
+      <h1>Grammar & Summary</h1>
+    </div>
+
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#" id="chat-tab">Chat with AI</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="summarize-tab">Summarize</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="similar-tab">Similar pages</a>
+      </li>
+    </ul>
+    <div>
+      <!-- Main Content Container -->
+      <div class="custom-container" id="content-container">
+        <div id="summarize-content" style="display: none">
+          <div class="form-group">
+            <label for="styleSelect">Explanation style:</label>
+            <select class="form-control" id="styleSelect">
+              <option>For Newbies</option>
+              <option>Intermediate</option>
+              <option>Detailed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="languageSelect">Language:</label>
+            <select class="form-control" id="languageSelect">
+              <option>Auto-Detect</option>
+              <option>English</option>
+              <option>Spanish</option>
+              <option>French</option>
+              <option>German</option>
+              <!-- <option>Romanian</option> -->
+              <!-- Add more languages as needed -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="lengthSelect">Summary Length:</label>
+            <select class="form-control" id="lengthSelect">
+              <option value="short">Short</option>
+              <option value="medium">Medium</option>
+              <option value="long">Long</option>
+            </select>
+          </div>
+
+          <div class="button mt-3">
+            <button id="summarize" class="btn btn-primary">
+              Summarize and Download
+            </button>
+          </div>
+
+          <div id="loading" style="display: none; margin-top: 10px">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Please wait, summarizing...</p>
+          </div>
+        </div>
+        <div id="similar-content" style="display: none">
+          <h4>Similar Pages</h4>
+
+          <!-- Add your settings form or content here -->
+        </div>
+
+        <div id="chat-content">
+          <div id="ai-assistant">
+            <div id="ai-conversation" class="conversation-box">
+              <div class="ai-message">Hello! How can I assist you today?</div>
+            </div>
+            <div id="input-container">
+              <input
+                type="text"
+                id="ai-input"
+                placeholder="Ask me anything..."
+              />
+              <button id="ai-send">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <script src="popup.js"></script>
+      <script src="../bootstrap/bootstrap.bundle.min.js"></script>
+      <script src="../bootstrap/jspdf.umd.min.js"></script>
     </div>
   </body>
 </html>
