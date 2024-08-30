@@ -3,7 +3,8 @@
   "name": "Grammar and Summary Extension",
   "version": "1.0",
   "description": "Corrects grammar, suggests auto-completions, and summarizes text on web pages.",
-  "permissions": ["activeTab", "scripting"],
+  "permissions": ["activeTab", "scripting", "storage", "webNavigation"],
+
   "background": {
     "service_worker": "background.js"
   },

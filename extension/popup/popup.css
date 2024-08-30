@@ -32,7 +32,7 @@
 
 #ai-assistant {
   width: 100%;
-  max-width: 400px;
+  height: 100%; /* Ensure the assistant takes up the full height of the popup */
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -46,10 +46,7 @@
   padding: 15px;
   overflow-y: auto;
   border-bottom: 1px solid #ddd;
-}
-
-.conversation-box {
-  max-height: 400px;
+  margin-bottom: 50px;
 }
 
 .user-message {
@@ -71,9 +68,14 @@
 }
 
 #input-container {
+  position: fixed;
+  bottom: 0;
+  width: 92%;
   display: flex;
   padding: 10px;
-  background-color: #f4f4f4;
+  background-color: white;
+  border-top: 1px solid #ddd;
+  z-index: 100;
 }
 
 #ai-input {
@@ -98,34 +100,24 @@
   background-color: #0056b3;
 }
 
-.typing-indicator {
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  margin: 0 2px;
-  background-color: #999;
-  border-radius: 50%;
-  animation: blink 1.4s infinite both;
+#chat-reset-message {
+  font-style: italic;
+  color: gray;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-left: 70px;
 }
 
-.typing-indicator:nth-child(2) {
-  animation-delay: 0.2s;
+#reloadIcon {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  margin-left: 20px;
+  margin-bottom: 15px;
 }
 
-.typing-indicator:nth-child(3) {
-  animation-delay: 0.4s;
-}
-
-@keyframes blink {
-  0%,
-  20% {
-    background-color: #999;
-  }
-  50% {
-    background-color: transparent;
-  }
-  100%,
-  80% {
-    background-color: #999;
-  }
+#chat-reset-message-container {
+  display: flex;
+  align-items: center;
+  /* Align items vertically center */
 }

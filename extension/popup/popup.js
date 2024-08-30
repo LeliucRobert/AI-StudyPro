@@ -184,35 +184,28 @@ document.getElementById("summarize").addEventListener("click", async () => {
   );
 });
 
-conversationHistory = [
-  {
-    role: "system",
-    content: "You are a helpful assistant.",
-  },
-];
+let conversationHistory = [];
+
+chrome.runtime.sendMessage({ action: "getHistory" }, (response) => {
+  conversationHistory = response;
+  renderConversation();
+});
 
 document.getElementById("ai-send").addEventListener("click", async () => {
   const userInput = document.getElementById("ai-input").value;
   if (userInput === "") {
     return;
   }
-
-  document.getElementById(
-    "ai-conversation"
-  ).innerHTML += `<div class="user-message">${userInput}</div>`;
   document.getElementById("ai-input").value = "";
+  conversationHistory.push({ role: "user", content: userInput });
+  renderConversation();
 
-  conversationHistory.push({
-    role: "user",
-    content: userInput,
-  });
-
-  const typingIndicator = `<div class="ai-message typing-indicator">
-                            <span class="typing-indicator"></span>
-                            <span class="typing-indicator"></span>
-                            <span class="typing-indicator"></span>
-                            </div>`;
-  document.getElementById("ai-conversation").innerHTML += typingIndicator;
+  chrome.runtime.sendMessage(
+    { action: "addMessage", message: { role: "user", content: userInput } },
+    (response) => {
+      console.log(response);
+    }
+  );
 
   const response = await fetch("http://127.0.0.1:8000/chat/", {
     method: "POST",
@@ -220,16 +213,15 @@ document.getElementById("ai-send").addEventListener("click", async () => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      user_input: userInput,
+      conversation: conversationHistory,
     }),
   });
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8");
   let aiMessage = "";
-  const aiMessageElement = document.createElement("div");
-  aiMessageElement.classList.add("ai-message");
-  document.getElementById("ai-conversation").appendChild(aiMessageElement);
+  const messageElement = document.createElement("div");
+  messageElement.className = "ai-message";
 
   while (true) {
     const { done, value } = await reader.read();
@@ -237,18 +229,50 @@ document.getElementById("ai-send").addEventListener("click", async () => {
       break;
     }
     aiMessage += decoder.decode(value, { stream: true });
-    aiMessageElement.textContent = aiMessage;
-    aiMessageElement.scrollIntoView();
+    renderAiMessage(aiMessage, messageElement);
   }
 
-  document.querySelector(".typing-indicator").forEach((element) => {
-    element.remove();
+  conversationHistory.push({ role: "assistant", content: aiMessage });
+  chrome.runtime.sendMessage(
+    {
+      action: "addMessage",
+      message: { role: "assistant", content: aiMessage },
+    },
+    (response) => {
+      console.log(response.status);
+    }
+  );
+});
+
+function renderAiMessage(message, messageElement) {
+  const conversationDiv = document.getElementById("ai-conversation");
+  messageElement.textContent = message;
+
+  conversationDiv.appendChild(messageElement);
+  messageElement.scrollIntoView();
+}
+
+function renderConversation() {
+  const conversationDiv = document.getElementById("ai-conversation");
+  conversationDiv.innerHTML = "";
+
+  conversationHistory.forEach((message) => {
+    const messageElement = document.createElement("div");
+    if (message.role === "system") return;
+    messageElement.className =
+      message.role === "user" ? "user-message" : "ai-message";
+    messageElement.textContent = message.content;
+    conversationDiv.appendChild(messageElement);
   });
-  conversationHistory.push({
-    role: "assistant",
-    content: aiMessage,
+  conversationDiv.scrollTop = conversationDiv.scrollHeight;
+}
+
+document.getElementById("reloadIcon").addEventListener("click", function () {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.reload(tabs[0].id, function () {
+      window.close();
+    });
   });
-  document.getElementById("ai-input").value = "";
 });
 
 // document.getElementById("summarize").addEventListener("click", async () => {
