@@ -68,12 +68,10 @@ function triggerSimilarity() {
         return response.json(); // Convert response to JSON
       })
       .then((data) => {
-        console.log(data);
         const container = document.getElementById("similar-content");
         container.innerHTML = data.html; // Inject the HTML into the page
       })
       .catch((error) => {
-        console.error("Error:", error);
         const settingsContent = document.getElementById("similar-content");
         settingsContent.innerHTML =
           "An error occurred while fetching search results.";
@@ -88,11 +86,19 @@ document.getElementById("summarize").addEventListener("click", async () => {
   const languageSelect = document.getElementById("languageSelect").value;
   const styleSelect = document.getElementById("styleSelect").value;
   const lengthSelect = document.getElementById("lengthSelect").value;
-  console.log(lengthSelect);
+
   summarizeButton.disabled = true;
   loadingIndicator.style.display = "block";
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  if (!tab || !tab.url) {
+    return;
+  }
+
+  if (tab.url.startsWith("chrome://")) {
+    return;
+  }
 
   chrome.scripting.executeScript(
     {
@@ -169,14 +175,13 @@ document.getElementById("summarize").addEventListener("click", async () => {
             doc.save("summary.pdf");
           })
           .catch((error) => {
-            console.error("Error:", error);
+            return error;
           })
           .finally(() => {
             summarizeButton.disabled = false;
             loadingIndicator.style.display = "none";
           });
       } else {
-        console.error("Failed to extract text from the page.");
         summarizeButton.disabled = false;
         loadingIndicator.style.display = "none";
       }
@@ -200,12 +205,10 @@ document.getElementById("ai-send").addEventListener("click", async () => {
   conversationHistory.push({ role: "user", content: userInput });
   renderConversation();
 
-  chrome.runtime.sendMessage(
-    { action: "addMessage", message: { role: "user", content: userInput } },
-    (response) => {
-      console.log(response);
-    }
-  );
+  chrome.runtime.sendMessage({
+    action: "addMessage",
+    message: { role: "user", content: userInput },
+  });
 
   const response = await fetch("http://127.0.0.1:8000/chat/", {
     method: "POST",
@@ -233,15 +236,10 @@ document.getElementById("ai-send").addEventListener("click", async () => {
   }
 
   conversationHistory.push({ role: "assistant", content: aiMessage });
-  chrome.runtime.sendMessage(
-    {
-      action: "addMessage",
-      message: { role: "assistant", content: aiMessage },
-    },
-    (response) => {
-      console.log(response.status);
-    }
-  );
+  chrome.runtime.sendMessage({
+    action: "addMessage",
+    message: { role: "assistant", content: aiMessage },
+  });
 });
 
 function renderAiMessage(message, messageElement) {
@@ -274,38 +272,3 @@ document.getElementById("reloadIcon").addEventListener("click", function () {
     });
   });
 });
-
-// document.getElementById("summarize").addEventListener("click", async () => {
-//   const summarizeButton = document.getElementById("summarize");
-//   const loadingIndicator = document.getElementById("loading");
-
-//   const languageSelect = document.getElementById("languageSelect").value;
-//   const styleSelect = document.getElementById("styleSelect").value;
-//   const lengthSelect = document.getElementById("lengthSelect").value;
-
-//   summarizeButton.disabled = true;
-//   loadingIndicator.style.display = "block";
-
-//   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-
-//   chrome.runtime.sendMessage({
-//     action: "summarize",
-//     tabId: tab.id,
-//     language: languageSelect,
-//     style: styleSelect,
-//     length: lengthSelect,
-//   });
-
-//   // Listen for messages from the background script
-//   chrome.runtime.onMessage.addListener((message) => {
-//     if (message.action === "summaryComplete") {
-//       summarizeButton.disabled = false;
-//       loadingIndicator.style.display = "none";
-//       alert("Summary is ready and saved as a PDF!");
-//     } else if (message.action === "summaryError") {
-//       summarizeButton.disabled = false;
-//       loadingIndicator.style.display = "none";
-//       alert("An error occurred: " + message.error);
-//     }
-//   });
-// });
