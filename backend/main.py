@@ -52,6 +52,10 @@ def generate_response_stream(conversation: list):
             
             yield chunk_message
 
+@app.get("/ping/")
+async def ping():
+    return {"message": "pong"}
+
 @app.post("/chat/")
 async def ai_stream(request: MessageRequest):
     conversation = request.conversation
