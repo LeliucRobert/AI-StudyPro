@@ -43,6 +43,7 @@ Technologies used in the project:
 *   HTML
 *   JavaScript
 *   CSS
+*   Python
 
 <h2>💖Like my work?</h2>
 
