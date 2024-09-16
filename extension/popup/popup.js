@@ -50,7 +50,8 @@ function triggerSimilarity() {
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const pageTitle = tabs[0].title;
-
+    console.log(pageTitle);
+    // const url = "https://google-extension-6s6r.onrender.com/search/";
     const url = "http://127.0.0.1:8000/search/";
     fetch(url, {
       method: "POST",
@@ -65,11 +66,12 @@ function triggerSimilarity() {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        return response.json(); // Convert response to JSON
+        return response.json();
       })
       .then((data) => {
+        console.log(data);
         const container = document.getElementById("similar-content");
-        container.innerHTML = data.html; // Inject the HTML into the page
+        container.innerHTML = data.html;
       })
       .catch((error) => {
         const settingsContent = document.getElementById("similar-content");
@@ -111,7 +113,7 @@ document.getElementById("summarize").addEventListener("click", async () => {
     (results) => {
       if (results && results[0] && results[0].result) {
         const pageText = results[0].result;
-        const url = "http://127.0.0.1:8000/summarize/";
+        const url = "https://google-extension-6s6r.onrender.com/summarize/";
 
         fetch(url, {
           method: "POST",
@@ -151,8 +153,6 @@ document.getElementById("summarize").addEventListener("click", async () => {
             doc.setFontSize(12);
 
             const summaryLines = doc.splitTextToSize(data.summary, 180);
-
-            // doc.text(summaryLines, 10, 40);
 
             let currentY = 40;
             let currentLineIndex = 0;
@@ -210,15 +210,18 @@ document.getElementById("ai-send").addEventListener("click", async () => {
     message: { role: "user", content: userInput },
   });
 
-  const response = await fetch("http://127.0.0.1:8000/chat/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      conversation: conversationHistory,
-    }),
-  });
+  const response = await fetch(
+    "https://google-extension-6s6r.onrender.com/chat/",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        conversation: conversationHistory,
+      }),
+    }
+  );
 
   const reader = response.body.getReader();
   const decoder = new TextDecoder("utf-8");

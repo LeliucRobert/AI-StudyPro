@@ -1,14 +1,24 @@
 {
   "manifest_version": 3,
-  "name": "Grammar and Summary Extension",
+  "name": "AI StudyPro",
   "version": "1.0",
-  "description": "Corrects grammar, suggests auto-completions, and summarizes text on web pages.",
-  "permissions": ["activeTab", "scripting", "storage", "webNavigation"],
+  "description": "Provides AI-driven chat, summaries, and related content based on the current webpage.",
+  "permissions": ["activeTab", "scripting", "webNavigation"],
 
   "background": {
     "service_worker": "background.js"
   },
   "action": {
+    "default_icon": {
+      "16": "images/logo2.png",
+      "48": "images/logo2.png",
+      "128": "images/logo2.png"
+    },
     "default_popup": "popup/popup.html"
+  },
+  "icons": {
+    "16": "images/logo2.png",
+    "48": "images/logo2.png",
+    "128": "images/logo2.png"
   }
 }
