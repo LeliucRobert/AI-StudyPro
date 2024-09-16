@@ -120,6 +120,16 @@ lengths = {"short": "Give me a short explanation. It is mandatory to be less tha
             "medium": "Give me a medium explanation. It is mandatory to be more than 100 words and less than 500 words.", 
             "long": "Give me a long explanation. It is mandatory to be more than 500 words."}
 
+
+
+@app.get("/privacy-policy/", response_class=HTMLResponse)
+async def privacy_policy():
+    file_path = os.path.join(os.getcwd(),  "privacy_policy.html")
+    with open(file_path, "r") as file:
+        html_content = file.read()
+    return HTMLResponse(content=html_content, status_code=200)
+
+
 class SummarizeRequest(BaseModel):
     text: str
     language: str
