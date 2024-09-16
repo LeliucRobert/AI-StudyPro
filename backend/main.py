@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 from lxml import etree
 import urllib.parse
 import re
-
+import time
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_SECRET_KEY")
@@ -75,24 +75,32 @@ async def search_duckduckgo(request: SearchRequest):
     cleaned_query = clean_query(query)
     
 
+  
+
     headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"
     }
 
     encoded_query = urllib.parse.quote(cleaned_query)
-   
+    
     search_url = f"https://www.bing.com/search?q={encoded_query}"
    
-    response = requests.get(search_url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
     
- 
+
+    response = requests.get(search_url, headers=headers, timeout=10)
+
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+     
+  
         
     list_items = soup.find_all('li', class_='b_algo')
 
-
+  
     html_results = ""
+   
     for item in list_items:
+       
         a_tag = item.find('h2').find('a')
         title = a_tag.get_text()
         url = a_tag.get('href')
