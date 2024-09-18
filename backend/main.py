@@ -15,20 +15,28 @@ import time
 load_dotenv()
 
 openai.api_key = os.getenv("OPENAI_API_SECRET_KEY")
-allowed_origins = os.getenv("ALLOWED_ORIGINS")
+
 openai_model = os.getenv("OPENAI_MODEL")
+
 
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=allowed_origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class DynamicCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        origin = request.headers.get('origin')
+        response = await call_next(request)
 
+  
+        if origin and origin.startswith('chrome-extension://'):
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, DELETE'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        
+        return response
+
+app.add_middleware(DynamicCORSMiddleware)
 conversation_history = {}
 
 

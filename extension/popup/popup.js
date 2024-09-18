@@ -114,6 +114,7 @@ document.getElementById("summarize").addEventListener("click", async () => {
       if (results && results[0] && results[0].result) {
         const pageText = results[0].result;
         const url = "https://google-extension-6s6r.onrender.com/summarize/";
+        // const url = "http://127.0.0.1:8000/summarize/";
 
         fetch(url, {
           method: "POST",
