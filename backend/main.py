@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, Request, HTTPException
+from fastapi import FastAPI, Form, Request, HTTPException, Response
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fpdf import FPDF
 import openai
