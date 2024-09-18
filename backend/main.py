@@ -23,21 +23,33 @@ openai_model = os.getenv("OPENAI_MODEL")
 
 app = FastAPI()
 
-class DynamicCORSMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        origin = request.headers.get('origin')
-        response = await call_next(request)
+app = FastAPI()
 
-  
-        if origin and origin.startswith('chrome-extension://'):
-            response.headers['Access-Control-Allow-Origin'] = origin
-            response.headers['Access-Control-Allow-Credentials'] = 'true'
-            response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, DELETE'
-            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-        
-        return response
+# This function will dynamically allow all 'chrome-extension://' origins
+def custom_allow_origins(origin: str) -> bool:
+    return re.match(r"chrome-extension://.*", origin) is not None
 
-app.add_middleware(DynamicCORSMiddleware)
+# Add CORS middleware
+@app.middleware("http")
+async def custom_cors_middleware(request, call_next):
+    response = await call_next(request)
+    
+    origin = request.headers.get("origin")
+    
+    if origin and custom_allow_origins(origin):
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "POST, GET, OPTIONS, DELETE"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    
+    return response
+
+@app.options("/{rest_of_path:path}")
+async def preflight_handler():
+    return Response(headers={
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    })
 conversation_history = {}
 
 
