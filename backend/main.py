@@ -25,11 +25,11 @@ app = FastAPI()
 
 app = FastAPI()
 
-# This function will dynamically allow all 'chrome-extension://' origins
+
 def custom_allow_origins(origin: str) -> bool:
     return re.match(r"chrome-extension://.*", origin) is not None
 
-# Add CORS middleware
+
 @app.middleware("http")
 async def custom_cors_middleware(request, call_next):
     response = await call_next(request)

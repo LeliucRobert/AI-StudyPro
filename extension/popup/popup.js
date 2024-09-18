@@ -51,8 +51,8 @@ function triggerSimilarity() {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     const pageTitle = tabs[0].title;
     console.log(pageTitle);
-    // const url = "https://google-extension-6s6r.onrender.com/search/";
-    const url = "http://127.0.0.1:8000/search/";
+    const url = "https://google-extension-6s6r.onrender.com/search/";
+    // const url = "http://127.0.0.1:8000/search/";
     fetch(url, {
       method: "POST",
       headers: {
