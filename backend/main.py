@@ -5,6 +5,7 @@ import openai
 from dotenv import load_dotenv
 import os
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
 import requests
 from bs4 import BeautifulSoup
