@@ -143,7 +143,7 @@ lengths = {"short": "Give me a short explanation. It is mandatory to be less tha
 
 
 
-@app.get("/privacy-policy/", response_class=HTMLResponse)
+@app.get("/privacy-policy", response_class=HTMLResponse)
 async def privacy_policy():
     file_path = os.path.join(os.getcwd(),  "privacy_policy.html")
     with open(file_path, "r") as file:
