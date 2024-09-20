@@ -2,7 +2,7 @@
 
 <h2>🚀 Demo</h2>
 
-[https://youtu.be/JQ0CiS3DUfc](https://youtu.be/JQ0CiS3DUfc)
+https://chromewebstore.google.com/detail/AI%20StudyPro/ipcmojjhkejcgcbjjjaempcndileadhh?utm_source=ext_app_menu
 
 <h2>🎬 Presentation </h2>
 
