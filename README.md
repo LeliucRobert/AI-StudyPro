@@ -30,7 +30,7 @@ https://chromewebstore.google.com/detail/AI%20StudyPro/ipcmojjhkejcgcbjjjaempcnd
 Here're some of the project's best features:
 
 *   The AI provides explanations or additional information based on the page content answering questions about the material you're viewing.
-*   The user can generate customizable summaries of the website based on their prefferences
+*   The user can generate customizable summaries of the website based on their preferences
 *   The extension can recommend similar web pages based on the content being viewed enhancing learning or research
 
 
